@@ -23,8 +23,11 @@ namespace STC.WPF.Models
             get => _innerRadius;
             set
             {
-                _innerRadius = value;
-                OnPropertyChanged(nameof(InnerRadius));
+                if (value >= 0)
+                {
+                    _innerRadius = value;
+                    OnPropertyChanged(nameof(InnerRadius));
+                }
             }
         }
 
@@ -34,8 +37,11 @@ namespace STC.WPF.Models
             get => _outerRadius;
             set
             {
-                _outerRadius = value;
-                OnPropertyChanged(nameof(OuterRadius));
+                if (value >= 0)
+                {
+                    _outerRadius = value;
+                    OnPropertyChanged(nameof(OuterRadius));
+                }
             }
         }
 

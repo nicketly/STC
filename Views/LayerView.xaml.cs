@@ -25,7 +25,6 @@ namespace STC.WPF.Views
         public LayerView()
         {
             InitializeComponent();
-            DataContext = new LayerViewModel();
         }
     }
 }

@@ -14,11 +14,11 @@ namespace STC.WPF.ViewModels
         public InputPageViewModel()
         {
             LayerCount = 1;
-            Layers = new ObservableCollection<Layer>();
+            Layers = new ObservableCollection<LayerViewModel>();
             UpdateLayers();
         }
 
-        public ObservableCollection<Layer> Layers { get; set; } = new ObservableCollection<Layer>();
+        public ObservableCollection<LayerViewModel> Layers { get; set; }
 
         private int _layerCount = 1;
         public int LayerCount
@@ -35,19 +35,46 @@ namespace STC.WPF.ViewModels
             }
         }
 
-        public List<string> Materials { get; set; } = new List<string>
-        {
-            "Медь",
-            "Алюминий",
-            "Базальтовое волокно",
-            "Сталь"
-        };
+        //public List<string> Materials { get; set; } = new List<string>
+        //{
+        //    "Медь",
+        //    "Алюминий",
+        //    "Базальтовое волокно",
+        //    "Сталь"
+        //};
 
+        private double _wallHeight;
+        public double WallHeight
+        {
+            get => _wallHeight;
+            set
+            {
+                if (value >= 0)
+                {
+                    _wallHeight = value;
+                    OnPropertyChanged(nameof(WallHeight));
+                }
+            }
+        }
+
+        public double TInner { get; set; }
+        public double TOuter { get; set; }
+        public bool ValidateInput(out string errorMessage)
+        {
+            if (WallHeight <= 0)
+            {
+                errorMessage = "Высота стенки должна быть положительным числом";
+                return false;
+            }
+            errorMessage = null;
+            return true;
+        }
         private void UpdateLayers()
         {
             while (Layers.Count < LayerCount)
             {
-                Layers.Add(new Layer { LayerNumber = Layers.Count + 1 });
+                var layer = new Layer { LayerNumber = Layers.Count + 1 };
+                Layers.Add(new LayerViewModel { Layer = layer });
             }
 
             while (Layers.Count > LayerCount)
@@ -55,17 +82,16 @@ namespace STC.WPF.ViewModels
                 Layers.RemoveAt(Layers.Count - 1);
             }
 
-            // Обновить номера всех слоёв
             for (int i = 0; i < Layers.Count; i++)
             {
-                Layers[i].LayerNumber = i + 1;
+                Layers[i].Layer.LayerNumber = i + 1;
             }
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
+
 
 }

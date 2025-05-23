@@ -27,7 +27,7 @@
                 <ColumnDefinition Width="6*"/>
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
-            
+
             <!-- Left Part -->
             <StackPanel Grid.Column="0" Margin="10">
                 <TextBlock Text="Параметры стенки" Style="{StaticResource Header2Style}"/>
@@ -66,7 +66,9 @@
                              Grid.Column="1" 
                              Width="60" 
                              Height="20" 
-                             Text="{Binding WallHeightInput, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding WallHeight, UpdateSourceTrigger=PropertyChanged}"
+                             FontFamily="Bahnschrift Light SemiCondensed"
+                             Foreground="#FF8F8F8F"/>
                 </Grid>
                 <TextBlock Text="Граничные условия" Style="{StaticResource Header2Style}"/>
                 <Grid Margin="0 10 0 0">
@@ -78,7 +80,7 @@
                         <ColumnDefinition Width="12*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                
+
                     <TextBlock Grid.Row="0" 
                                Grid.Column="0" 
                                Text="Температура внутренней поверхности, °C:" 
@@ -88,8 +90,10 @@
                              Grid.Column="1" 
                              Width="60" 
                              Height="20" 
-                             Text="{Binding WallHeightInput, UpdateSourceTrigger=PropertyChanged}"/>
-                
+                             Text="{Binding TInner, UpdateSourceTrigger=PropertyChanged}"
+                             FontFamily="Bahnschrift Light SemiCondensed"
+                             Foreground="#FF8F8F8F"/>
+
                     <TextBlock Grid.Row="1" 
                                Grid.Column="0"  
                                Text="Температура внешней поверхности, °C:" 
@@ -99,7 +103,9 @@
                              Grid.Column="1" 
                              Width="60" 
                              Height="20" 
-                             Text="{Binding WallHeightInput, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding TOuter, UpdateSourceTrigger=PropertyChanged}"
+                             FontFamily="Bahnschrift Light SemiCondensed"
+                             Foreground="#FF8F8F8F"/>
                 </Grid>
                 <Button x:Name="CalculateButton"
                         Width="120"
@@ -118,7 +124,7 @@
                         <ColumnDefinition Width="12*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                
+
                     <TextBlock Grid.Row="0" 
                                Grid.Column="0" 
                                Text="Тепловой поток через стенку, Вт:" 
@@ -128,10 +134,12 @@
                              Grid.Column="1" 
                              Width="60" 
                              Height="20" 
-                             Text="{Binding WallHeightInput, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding WallHeightInput, UpdateSourceTrigger=PropertyChanged}"
+                             FontFamily="Bahnschrift Light SemiCondensed"
+                             Foreground="#FF8F8F8F"/>
                 </Grid>
             </StackPanel>
-            
+
             <!-- Right Part -->
             <ScrollViewer Grid.Column="1" Margin="10" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
@@ -145,7 +153,7 @@
                     </ItemsControl>
                 </StackPanel>
             </ScrollViewer>
-            
+
         </Grid>
     </Grid>
 </UserControl>

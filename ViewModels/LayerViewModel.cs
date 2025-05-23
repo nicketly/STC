@@ -27,7 +27,6 @@ namespace STC.WPF.ViewModels
         public LayerViewModel()
         {
             Materials = new ObservableCollection<Material>(DatabaseInitializer.LoadMaterials());
-            Layer = new Layer();
 
             GroupedMaterialsView = new CollectionViewSource
             {
