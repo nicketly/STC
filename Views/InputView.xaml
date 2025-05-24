@@ -66,7 +66,7 @@
                              Grid.Column="1" 
                              Width="60" 
                              Height="20" 
-                             Text="{Binding WallHeight, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding WallHeightInput, UpdateSourceTrigger=PropertyChanged}"
                              FontFamily="Bahnschrift Light SemiCondensed"
                              Foreground="#FF8F8F8F"/>
                 </Grid>
@@ -90,7 +90,7 @@
                              Grid.Column="1" 
                              Width="60" 
                              Height="20" 
-                             Text="{Binding TInner, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding TInnerInput, UpdateSourceTrigger=PropertyChanged}"
                              FontFamily="Bahnschrift Light SemiCondensed"
                              Foreground="#FF8F8F8F"/>
 
@@ -103,7 +103,7 @@
                              Grid.Column="1" 
                              Width="60" 
                              Height="20" 
-                             Text="{Binding TOuter, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding TOuterInput, UpdateSourceTrigger=PropertyChanged}"
                              FontFamily="Bahnschrift Light SemiCondensed"
                              Foreground="#FF8F8F8F"/>
                 </Grid>
@@ -137,6 +137,18 @@
                              Text="{Binding WallHeightInput, UpdateSourceTrigger=PropertyChanged}"
                              FontFamily="Bahnschrift Light SemiCondensed"
                              Foreground="#FF8F8F8F"/>
+                    <ItemsControl Grid.Row="1"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  Height="Auto"
+                                  ItemsSource="{Binding Temperatures}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StringFormat='t{0:F2} °C'}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        
+                    </ItemsControl>
                 </Grid>
             </StackPanel>
 

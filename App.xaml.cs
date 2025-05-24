@@ -14,6 +14,9 @@ namespace STC.WPF
         {
             base.OnStartup(e);
             DatabaseInitializer.EnsureDatabaseCreated();
+            var culture = new System.Globalization.CultureInfo("ru-RU");
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
         }
 
     }

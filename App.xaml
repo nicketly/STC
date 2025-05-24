@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:xctk ="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:local="clr-namespace:STC.WPF"
+             xmlns:services="clr-namespace:STC.WPF.Services"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <!-- Text -->
@@ -84,5 +85,7 @@
             <Setter Property="Padding" Value="12 0 0 0"/>
             <Setter Property="FontFamily" Value="Bahnschrift Light SemiCondensed"/>
         </Style>
+
+        <services:DecimalConverterService x:Key="DecimalConverter"/>
     </Application.Resources>
 </Application>
