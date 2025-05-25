@@ -113,7 +113,8 @@
                         HorizontalAlignment="Left"
                         Margin="30 30 0 0"
                         Content="Рассчитать"
-                        Style="{StaticResource ButtonText}"/>
+                        Style="{StaticResource ButtonText}"
+                        Command="{Binding CalculateCommand}"/>
                 <TextBlock Text="Результаты расчета" Style="{StaticResource Header2Style}"/>
                 <Grid Margin="0 10 0 0">
                     <Grid.RowDefinitions>

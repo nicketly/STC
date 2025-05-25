@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Windows;
 using STC.WPF.Models;
 
 namespace STC.WPF.Database

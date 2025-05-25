@@ -8,7 +8,6 @@
              xmlns:viewModels="clr-namespace:STC.WPF.ViewModels"
              xmlns:views="clr-namespace:STC.WPF.Views"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance viewModels:LayerViewModel}"
              x:Name="Root">
     
     <Expander Margin="0 5" IsExpanded="True" FontFamily="Bahnschrift Light SemiCondensed">
@@ -38,7 +37,8 @@
                        Grid.Column="1" 
                        Width="60" 
                        Height="20" 
-                       Text="{Binding Layer.InnerRadius, UpdateSourceTrigger=PropertyChanged}"/>
+                       Text="{Binding InnerRadiusInput, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                       IsReadOnly="{Binding IsInnerRadiusReadOnly}"/>
             <TextBlock Grid.Row="1" 
                        Grid.Column="0" 
                        Text="Внешний радиус, м:" 
@@ -48,7 +48,7 @@
                        Grid.Column="1" 
                        Width="60" 
                        Height="20" 
-                       Text="{Binding Layer.OuterRadius, UpdateSourceTrigger=PropertyChanged}"/>
+                       Text="{Binding OuterRadiusInput, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
             <TextBlock Grid.Row="2" 
                        Grid.Column="0" 
                        Grid.ColumnSpan="2"
