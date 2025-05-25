@@ -20,7 +20,7 @@ namespace STC.WPF.Models
     { 
         public CalculationAlgorithm(CalculationOutput output)
         {
-            Epsilon = 0.01 * output.HeatFluxDensity;
+            //Epsilon = 0.01 * output.HeatFluxDensity;
         }
         public List<double> InitialTemperatures { get; set; } = new();            // t2..tn
         public List<double> LayerMeanTemperatures { get; set; } = new();          // T1..Tn
@@ -28,9 +28,9 @@ namespace STC.WPF.Models
         public List<double> ThermalResistances { get; set; } = new();             // R1..Rn
         public List<double> LocalHeatFluxesDensities { get; set; } = new();       // ql1..qln
         public List<double> Deviations { get; set; } = new();                     // Δql1..Δqln
-        public double Error { get; set; } = new();                                // Error Function to minimize
-        public double Epsilon { get; private set; }                               // Accuracy
-        public int MaxIterations { get; set; } = 100;                             // Max Iterations
+        public double Error { get; set; }                                         // Error Function to minimize
+        public double Epsilon { get; set; }                                       // Accuracy
+        public int MaxIterations { get; set; } = 300;                             // Max Iterations
 
     }
 

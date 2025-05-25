@@ -48,10 +48,8 @@ namespace STC.WPF.ViewModels
 
                     if (!IsInnerRadiusReadOnly)
                     {
-                        // Разрешаем ввод с запятой или точкой (заменяем запятую на точку)
                         var normalized = value.Replace(',', '.');
 
-                        // Попытка парсинга, но не сбрасываем текст, если парсинг неудачен
                         if (double.TryParse(normalized, NumberStyles.Any, CultureInfo.InvariantCulture, out double parsed))
                         {
                             Layer.InnerRadius = parsed;
