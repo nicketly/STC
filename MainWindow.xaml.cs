@@ -49,7 +49,10 @@ namespace STC.WPF
         private void ReportUserFormButton_Click(object sender, RoutedEventArgs e)
         {
             if (_reportView == null)
-                _reportView = new ReportView();
+            { 
+                _reportView = new ReportView(); 
+                _reportView.DataContext = _reportVM;
+            }
 
             MainFrame.Content = _reportView;
         }
@@ -57,7 +60,9 @@ namespace STC.WPF
         private void AboutUserFormButton_Click(object sender, RoutedEventArgs e)
         {
             if (_aboutView == null)
+            { 
                 _aboutView = new AboutView();
+            }
 
             MainFrame.Content = _aboutView;
         }
