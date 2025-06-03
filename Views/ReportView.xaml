@@ -94,9 +94,8 @@
                         <StackPanel Margin="0 20 0 0">
                             <TextBlock Text="Сохранить отчёт" Style="{StaticResource Header2Style}" Margin="0 0 0 12"/>
                             <StackPanel Orientation="Horizontal" Margin="0 5">
-                                <Button Content="Excel" Width="80" Margin="0 0 10 0" Style="{StaticResource ButtonText}"/>
-                                <Button Content="PDF" Width="80" Margin="0 0 10 0" Style="{StaticResource ButtonText}"/>
-                                <Button Content="TXT" Width="80" Style="{StaticResource ButtonText}"/>
+                                <Button x:Name="ButtonExcel" Content="Excel" Width="80" Margin="0 0 10 0" Style="{StaticResource ButtonText}" Command="{Binding SaveAsExcelCommand}"/>
+                                <Button x:Name="ButtonTXT" Content="TXT" Width="80" Style="{StaticResource ButtonText}" Click="ButtonTxt_Click"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
@@ -111,11 +110,31 @@
                 </Grid.RowDefinitions>
 
                 <GroupBox Header="График температур" Grid.Row="0" Margin="0 0 0 10">
-                    <lvc:CartesianChart Series="{Binding TemperatureSeries}" Margin="5"/>
+                    <lvc:CartesianChart Series="{Binding TemperatureSeries}" Margin="5">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="{Binding TemperatureAxisX.Title}"
+                                      Labels="{Binding TemperatureAxisX.Labels}"/>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="{Binding TemperatureAxisY.Title}"
+                                      MinValue="{Binding TemperatureAxisY.MinValue}"
+                                      MaxValue="{Binding TemperatureAxisY.MaxValue}"/>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
                 </GroupBox>
 
                 <GroupBox Header="График плотности теплового потока" Grid.Row="1">
-                    <lvc:CartesianChart Series="{Binding HeatFluxSeries}" Margin="5"/>
+                    <lvc:CartesianChart Series="{Binding HeatFluxSeries}" Margin="5">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="{Binding LocalHeatFluxDensityAxisX.Title}"
+                                      Labels="{Binding LocalHeatFluxDensityAxisX.Labels}"/>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="{Binding LocalHeatFluxDensityAxisY.Title}"
+                                      MinValue="{Binding LocalHeatFluxDensityAxisY.MinValue}"
+                                      MaxValue="{Binding LocalHeatFluxDensityAxisY.MaxValue}"/>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
                 </GroupBox>
             </Grid>
         </Grid>

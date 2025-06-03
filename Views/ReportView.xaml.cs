@@ -1,4 +1,5 @@
-﻿using STC.WPF.ViewModels;
+﻿using STC.WPF.Services;
+using STC.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,14 @@ namespace STC.WPF.Views
         {
             InitializeComponent();
         }
+
+        private void ButtonTxt_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is ReportViewModel vm)
+            {
+                ReportExportService.ExportToTxt(vm.Input, vm.Output, vm.Algorithm);
+            }
+        }
+
     }
 }

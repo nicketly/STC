@@ -194,7 +194,7 @@ namespace STC.WPF.ViewModels
             var algorithm = new CalculationAlgorithm(output);
             CalculationService.Calculate(input, algorithm, output);
 
-            ReportVM?.SetData(output, algorithm);
+            ReportVM?.SetData(output, algorithm, input);
 
             Application.Current.Dispatcher.Invoke(() =>
             {
