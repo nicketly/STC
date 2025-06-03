@@ -10,20 +10,24 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using STC.WPF.Services;
+using STC.WPF.ViewModels;
 
 namespace STC.WPF.ViewModels
 {
     public class InputPageViewModel : INotifyPropertyChanged
     {
+        public ICommand CalculateCommand { get; }
+        public ReportViewModel ReportVM { get; set; }
+
         public InputPageViewModel()
         {
             LayerCount = 1;
             Layers = new ObservableCollection<LayerViewModel>();
-            UpdateLayers();
-
             CalculateCommand = new RelayCommand(Calculate);
+            UpdateLayers();
         }
 
+        public InputPageViewModel(ReportViewModel reportVM) : this() { ReportVM = reportVM; }
         public ObservableCollection<LayerViewModel> Layers { get; set; }
 
         private int _layerCount = 1;
@@ -116,16 +120,14 @@ namespace STC.WPF.ViewModels
         {
             if (WallHeight <= 0)
             {
-                errorMessage = "Высота стенки может принимать толко положительное значение";
+                errorMessage = "Высота стенки может принимать только положительное значение";
                 return false;
             }
-
             if (Layers.Any(l => l.Layer.InnerRadius <= 0 || l.Layer.OuterRadius <= 0))
             {
-                errorMessage = "Радиусы могут принимать толко положительные значения";
+                errorMessage = "Радиусы могут принимать только положительные значения";
                 return false;
             }
-
             for (int i = 0; i < LayerCount; i++)
             {
                 var layer = Layers[i].Layer;
@@ -134,7 +136,6 @@ namespace STC.WPF.ViewModels
                     errorMessage = $"В слое {i + 1} внутренний радиус должен быть меньше внешнего";
                     return false;
                 }
-
             }
 
             errorMessage = null;
@@ -147,36 +148,30 @@ namespace STC.WPF.ViewModels
             {
                 var layer = new Layer { LayerNumber = Layers.Count + 1 };
                 var vm = new LayerViewModel { Layer = layer };
-
-                if (Layers.Count > 0)
-                {
-                    var prevLayer = Layers.Last().Layer;
-                    layer.InnerRadius = prevLayer.OuterRadius;
-                    vm.IsInnerRadiusReadOnly = true;
-                }
-
-                vm.PropertyChanged += (sender, e) =>
-                {
-                    if (e.PropertyName == nameof(LayerViewModel.OuterRadiusInput))
-                    {
-                        int index = Layers.IndexOf(vm);
-                        if (index >= 0 && index < Layers.Count - 1)
-                        {
-                            var nextLayerVM = Layers[index + 1];
-                            nextLayerVM.Layer.InnerRadius = vm.Layer.OuterRadius;
-                            nextLayerVM.UpdateInnerRadiusFromModel();
-                        }
-                    }
-                };
-
                 Layers.Add(vm);
             }
 
             while (Layers.Count > LayerCount)
+            {
                 Layers.RemoveAt(Layers.Count - 1);
+            }
 
             for (int i = 0; i < Layers.Count; i++)
+            {
                 Layers[i].Layer.LayerNumber = i + 1;
+                if (i == 0)
+                {
+                    Layers[i].IsInnerRadiusReadOnly = false;
+                }
+                else
+                {
+                    Layers[i].IsInnerRadiusReadOnly = true;
+                    Layers[i].Layer.InnerRadius = Layers[i - 1].Layer.OuterRadius;
+                    Layers[i].UpdateInnerRadiusFromModel();
+                }
+                Layers[i].Layer.PropertyChanged -= OnLayerPropertyChanged;
+                Layers[i].Layer.PropertyChanged += OnLayerPropertyChanged;
+            }
         }
 
         private void Calculate()
@@ -195,11 +190,49 @@ namespace STC.WPF.ViewModels
                 Layers = Layers.Select(l => l.Layer).ToList()
             };
 
-            var result = CalculationService.Calculate(input);
-            MessageBox.Show($"Расчёт завершён. Результат: {result}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            var output = new CalculationOutput();
+            var algorithm = new CalculationAlgorithm(output);
+            CalculationService.Calculate(input, algorithm, output);
+
+            ReportVM?.SetData(output, algorithm);
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window is MainWindow mainWindow)
+                    {
+                        var reportView = new Views.ReportView
+                        {
+                            DataContext = ReportVM
+                        };
+                        mainWindow.MainFrame.Content = reportView;
+                        break;
+                    }
+                }
+            });
+
+            //MessageBox.Show($"Расчёт завершён. Результат: {output.HeatFluxDensity:F2} Вт/м²", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        public ICommand CalculateCommand { get; }
+        private void OnLayerPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Layer.OuterRadius))
+            {
+                var changedLayer = Layers.FirstOrDefault(l => l.Layer == sender);
+                if (changedLayer == null) return;
+
+                int index = Layers.IndexOf(changedLayer);
+
+                if (index >= 0 && index < Layers.Count - 1)
+                {
+                    var nextLayerVM = Layers[index + 1];
+                    nextLayerVM.Layer.InnerRadius = changedLayer.Layer.OuterRadius;
+                    nextLayerVM.UpdateInnerRadiusFromModel();
+                }
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name) =>

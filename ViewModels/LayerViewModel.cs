@@ -86,7 +86,6 @@ namespace STC.WPF.ViewModels
             _innerRadiusInput = Layer.InnerRadius.ToString("G", CultureInfo.InvariantCulture);
             OnPropertyChanged(nameof(InnerRadiusInput));
         }
-
         public void UpdateOuterRadiusFromModel()
         {
             _outerRadiusInput = Layer.OuterRadius.ToString("G", CultureInfo.InvariantCulture);

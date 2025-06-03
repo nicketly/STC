@@ -1,28 +1,22 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using STC.WPF.ViewModels;
 using STC.WPF.Views;
 
 namespace STC.WPF
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        //public MainWindow()
-        //{
-        //    InitializeComponent();
-        //    MainFrame.Content = new InputView();
-        //}
+        private readonly InputPageViewModel _inputVM = new();
+        private InputView _inputView;
+
+        private readonly ReferenceViewModel _referenceVM = new();
+        private ReferenceView _referenceView;
+
+        private readonly ReportViewModel _reportVM = new();
+        private ReportView _reportView;
+
+        private AboutView _aboutView;
 
         public MainWindow()
         {
@@ -30,12 +24,54 @@ namespace STC.WPF
             InputViewInit();
         }
 
+        public ReportViewModel ReportVM { get; private set; } = new ReportViewModel();
         public void InputViewInit()
         {
             var inputView = new InputView();
-            inputView.DataContext = new InputPageViewModel();
+            var inputVM = new InputPageViewModel(_reportVM);
+            inputVM.ReportVM = ReportVM;
+
+            inputView.DataContext = inputVM;
             MainFrame.Content = inputView;
         }
+
+        private void ReferenceUserFormButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_referenceView == null)
+            {
+                _referenceView = new ReferenceView();
+                _referenceView.DataContext = _referenceVM;
+            }
+
+            MainFrame.Content = _referenceView;
+        }
+
+        private void ReportUserFormButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_reportView == null)
+                _reportView = new ReportView();
+
+            MainFrame.Content = _reportView;
+        }
+
+        private void AboutUserFormButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_aboutView == null)
+                _aboutView = new AboutView();
+
+            MainFrame.Content = _aboutView;
+        }
+
+        private void InputUserFormButton_Click(object sender, RoutedEventArgs e)
+        {
+            var inputVM = new InputPageViewModel(_reportVM);
+            var inputView = new InputView()
+            {
+                DataContext = inputVM
+            };
+            MainFrame.Content = inputView;
+        }
+
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
@@ -52,26 +88,6 @@ namespace STC.WPF
             {
                 this.DragMove();
             }
-        }
-
-        private void InputUserFormButton_Click(object sender, RoutedEventArgs e)
-        {
-            InputViewInit();
-        }
-
-        private void ReferenceUserFormButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Content = new ReferenceView();
-        }
-
-        private void ReportUserFormButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Content = new ReportView();
-        }
-
-        private void AboutUserFormButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Content = new AboutView();
         }
     }
 }

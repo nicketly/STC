@@ -115,7 +115,6 @@
                         Content="Рассчитать"
                         Style="{StaticResource ButtonText}"
                         Command="{Binding CalculateCommand}"/>
-                <TextBlock Text="Результаты расчета" Style="{StaticResource Header2Style}"/>
                 <Grid Margin="0 10 0 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -125,19 +124,6 @@
                         <ColumnDefinition Width="12*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Row="0" 
-                               Grid.Column="0" 
-                               Text="Тепловой поток через стенку, Вт:" 
-                               Style="{StaticResource RegularText}"
-                               Margin="30 5 0 0"/>
-                    <TextBox Grid.Row="0" 
-                             Grid.Column="1" 
-                             Width="60" 
-                             Height="20" 
-                             Text="{Binding WallHeightInput, UpdateSourceTrigger=PropertyChanged}"
-                             FontFamily="Bahnschrift Light SemiCondensed"
-                             Foreground="#FF8F8F8F"/>
                     <ItemsControl Grid.Row="1"
                                   Grid.Column="0"
                                   Grid.ColumnSpan="2"

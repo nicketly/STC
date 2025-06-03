@@ -7,16 +7,14 @@ using STC.WPF.Models;
 using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using STC.WPF.ViewModels;
 
 namespace STC.WPF.Services
 {
     public static class CalculationService
     {
-        public static string Calculate(CalculationInput input)
+        public static void Calculate(CalculationInput input, CalculationAlgorithm algorithm, CalculationOutput output)
         {
-            var output = new CalculationOutput();
-            var algorithm = new CalculationAlgorithm(output);
-
             // 1. Начальные приближения температур (t1 ... tn+1)
             algorithm.InitialTemperatures.Clear();
             for (int i = 0; i <= input.Layers.Count; i++)
@@ -91,19 +89,6 @@ namespace STC.WPF.Services
 
             output.FinalTemperatures = new List<double>(algorithm.InitialTemperatures);
             output.TotalHeatFlow = output.HeatFluxDensity * input.WallHeight;
-
-            // Формирование отладочной информации
-            var sb = new StringBuilder();
-            sb.AppendLine($"Температуры на границах: {string.Join(", ", algorithm.InitialTemperatures.Select(t => t.ToString("F5")))}");
-            sb.AppendLine($"Коэффициенты теплопроводности: {string.Join(", ", algorithm.ThermalConductivities.Select(l => l.ToString("F5")))}");
-            sb.AppendLine($"Термические сопротивления: {string.Join(", ", algorithm.ThermalResistances.Select(r => r.ToString("F5")))}");
-            sb.AppendLine($"Плотности теплового потока: {string.Join(", ", algorithm.LocalHeatFluxesDensities.Select(q => q.ToString("F5")))}");
-            sb.AppendLine($"Общая плотность потока: {output.HeatFluxDensity:F5}");
-            sb.AppendLine($"Отклонения: {string.Join(", ", algorithm.Deviations.Select(d => d.ToString("F5")))}");
-            sb.AppendLine($"Ошибка: {algorithm.Error:F8}");
-            sb.AppendLine(output.Converged ? $"Условие сходимости достигнуто за {output.Iterations} итераций." : "Решение не сошлось.");
-
-            return sb.ToString();
         }
 
         private static void Recalculate(CalculationInput input, CalculationAlgorithm algorithm, CalculationOutput output)

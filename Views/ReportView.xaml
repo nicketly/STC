@@ -1,29 +1,123 @@
-﻿<UserControl x:Class="STC.WPF.Views.ReportView"
+﻿<UserControl x:Class="STC.WPF.Views.ReportView" 
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:STC.WPF.Views"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:services="clr-namespace:STC.WPF.Services"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <services:BoolToVisibilityConverterService x:Key="BoolToVisibilityConverter"/>
+        <services:IndexService x:Key="IndexService"/>
+    </UserControl.Resources>
+
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <!-- Title -->
-            <TextBlock Grid.Row="0" Text="РЕЗУЛЬТАТ И ОТЧЁТ" Style="{StaticResource Header1Style}"/>
-            
-            <!-- Main -->
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="РЕЗУЛЬТАТ И ОТЧЁТ" Style="{StaticResource Header1Style}" />
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Part -->
+            <ScrollViewer Grid.Column="0" Margin="40 0 10 0">
+                <StackPanel>
+                    <TextBlock Text="Нет данных для отображения"
+                               Foreground="DarkRed"
+                               FontSize="14"
+                               Visibility="{Binding HasData, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}"
+                               Margin="0 0 0 10"/>
+
+                    <StackPanel Visibility="{Binding HasData, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Expander Header="Температуры на границах слоёв" IsExpanded="True" Margin="0 5">
+                            <ItemsControl ItemsSource="{Binding FinalTemperatures}" AlternationCount="1000">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <Run Text="t"/>
+                                            <Run Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentPresenter}, Path=(ItemsControl.AlternationIndex), Converter={StaticResource IndexService}, Mode=OneWay}"/>
+                                            <Run Text=":"/>
+                                            <Run Text="{Binding ., StringFormat=F2}"/>
+                                            <Run Text=" °C"/>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+
+                        <Expander Header="Коэффициенты теплопроводности" IsExpanded="True" Margin="0 5">
+                            <ItemsControl ItemsSource="{Binding ThermalConductivities}" AlternationCount="1000">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <Run Text="λ(T)"/>
+                                            <Run Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentPresenter}, Path=(ItemsControl.AlternationIndex), Converter={StaticResource IndexService}, Mode=OneWay}"/>
+                                            <Run Text=":"/>
+                                            <Run Text="{Binding ., StringFormat=F5}"/>
+                                            <Run Text=" Вт/(м·К)"/>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+
+                        <Expander Header="Распределение плотности теплового потока" IsExpanded="True" Margin="0 5">
+                            <ItemsControl ItemsSource="{Binding LocalHeatFluxesDensities}" AlternationCount="1000">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <Run Text="ql"/>
+                                            <Run Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentPresenter}, Path=(ItemsControl.AlternationIndex), Converter={StaticResource IndexService}, Mode=OneWay}"/>
+                                            <Run Text=":"/>
+                                            <Run Text="{Binding ., StringFormat=F5}"/>
+                                            <Run Text=" Вт/м"/>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+
+                        <TextBlock Text="{Binding TotalHeatFlow, StringFormat=Тепловой поток через стенку Q: {0:F3} Вт}"
+                                   Margin="0 10 0 0"
+                                   Style="{StaticResource Header2Style}"/>
+
+                        <StackPanel Margin="0 20 0 0">
+                            <TextBlock Text="Сохранить отчёт" Style="{StaticResource Header2Style}" Margin="0 0 0 12"/>
+                            <StackPanel Orientation="Horizontal" Margin="0 5">
+                                <Button Content="Excel" Width="80" Margin="0 0 10 0" Style="{StaticResource ButtonText}"/>
+                                <Button Content="PDF" Width="80" Margin="0 0 10 0" Style="{StaticResource ButtonText}"/>
+                                <Button Content="TXT" Width="80" Style="{StaticResource ButtonText}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Right Part -->
+            <Grid Grid.Column="1" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <GroupBox Header="График температур" Grid.Row="0" Margin="0 0 0 10">
+                    <lvc:CartesianChart Series="{Binding TemperatureSeries}" Margin="5"/>
+                </GroupBox>
+
+                <GroupBox Header="График плотности теплового потока" Grid.Row="1">
+                    <lvc:CartesianChart Series="{Binding HeatFluxSeries}" Margin="5"/>
+                </GroupBox>
             </Grid>
-
         </Grid>
     </Grid>
 </UserControl>
